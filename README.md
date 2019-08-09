@@ -1,4 +1,4 @@
-# socks5-go
+# socks5-go [![Build Status](https://travis-ci.com/Bpazy/socks5-go.svg?branch=master)](https://travis-ci.com/Bpazy/socks5-go)
 Simple socks5 proxy of Golang.
 
 # Build

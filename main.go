@@ -16,7 +16,7 @@ func main() {
 
 	for {
 		conn, err := listener.Accept()
-		connRW := NewReadWriter(conn)
+		connRW := NewReadWriteCloser(conn)
 		if err != nil {
 			log.Println(err)
 			continue
@@ -104,39 +104,39 @@ func getPort(portAddr []byte) int {
 }
 
 // simplify IO operations
-type ReadWriter struct {
-	rw io.ReadWriteCloser
+type ReadWriteCloser struct {
+	rwc io.ReadWriteCloser
 }
 
-func (r *ReadWriter) MustReadByte() byte {
+func (rwc *ReadWriteCloser) MustReadByte() byte {
 	buf := make([]byte, 1)
-	_, err := r.rw.Read(buf)
+	_, err := rwc.rwc.Read(buf)
 	if err != nil {
 		panic(err)
 	}
 	return buf[0]
 }
 
-func (r *ReadWriter) MustReadByteSize(size int) []byte {
+func (rwc *ReadWriteCloser) MustReadByteSize(size int) []byte {
 	buf := make([]byte, size)
-	_, err := r.rw.Read(buf)
+	_, err := rwc.rwc.Read(buf)
 	if err != nil {
 		panic(err)
 	}
 	return buf
 }
 
-func (r *ReadWriter) MustWrite(bytes []byte) {
-	_, err := r.rw.Write(bytes)
+func (rwc *ReadWriteCloser) MustWrite(bytes []byte) {
+	_, err := rwc.rwc.Write(bytes)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (r *ReadWriter) Close() {
-	_ = r.rw.Close()
+func (rwc *ReadWriteCloser) Close() {
+	_ = rwc.rwc.Close()
 }
 
-func NewReadWriter(r io.ReadWriteCloser) *ReadWriter {
-	return &ReadWriter{rw: r}
+func NewReadWriteCloser(rwc io.ReadWriteCloser) *ReadWriteCloser {
+	return &ReadWriteCloser{rwc: rwc}
 }
